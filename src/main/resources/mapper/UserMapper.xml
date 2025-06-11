@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.cetide.hibiscus.infrastructure.persistence.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="org.cetide.hibiscus.domain.model.aggregate.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="email" property="email" />
+        <result column="password_hash" property="passwordHash" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="status" property="status" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            `id,`
+            `username,`
+            `email,`
+            `password_hash,`
+            `avatar_url,`
+            `status,`
+            `created_at,`
+            `updated_at,`
+    </sql>
+
+</mapper>

@@ -1,0 +1,72 @@
+package org.cetide.hibiscus.domain.model.aggregate;
+
+import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDateTime;
+
+/**
+ * Tag 实体类
+ * @author Hibiscus-code-generate
+ */
+@TableName("hib_tag")
+public class Tag implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+    * 主键ID
+    */
+    @TableId
+    private Long id;
+
+    /**
+    * 标签名称
+    */
+    @TableField("name")
+    private String name;
+
+    /**
+    * 标签颜色（Hex）
+    */
+    @TableField("color")
+    private String color;
+
+    /**
+    * 创建时间
+    */
+    @TableField("created_at")
+    private LocalDateTime createdAt;
+
+
+    public Long getId() {
+    return id;
+    }
+
+    public void setId(Long id) {
+    this.id = id;
+    }
+    public String getName() {
+    return name;
+    }
+
+    public void setName(String name) {
+    this.name = name;
+    }
+    public String getColor() {
+    return color;
+    }
+
+    public void setColor(String color) {
+    this.color = color;
+    }
+    public LocalDateTime getCreatedAt() {
+    return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+    }
+}

@@ -19,7 +19,7 @@ public class CodeGenerateService {
 
         DatabaseConfig config = new DatabaseConfig();
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.setUrl("jdbc:mysql://localhost:3306/game_db");
+        config.setUrl("jdbc:mysql://localhost:3306/docnest_db");
         config.setUsername("root");
         config.setPassword("1234");
 
@@ -41,7 +41,8 @@ public class CodeGenerateService {
 
         for (String tableNameRaw : selectedTables) {
             String tableName = tableNameRaw.trim();
-            String className = NameConverter.toPascalCaseSingular(tableName);
+            String simpleName = extractMeaningfulName(tableName);
+            String className = NameConverter.toPascalCaseSingular(simpleName);
 
             List<TableColumn> columns = service.getColumns(config, tableName, true);
             System.out.println("生成代码中：" + tableName);
@@ -221,5 +222,13 @@ public class CodeGenerateService {
             }
         }
         return tables;
+    }
+
+    public static String extractMeaningfulName(String rawTableName) {
+        int index = rawTableName.indexOf("_");
+        if (index != -1 && index < rawTableName.length() - 1) {
+            return rawTableName.substring(index + 1);
+        }
+        return rawTableName;
     }
 }

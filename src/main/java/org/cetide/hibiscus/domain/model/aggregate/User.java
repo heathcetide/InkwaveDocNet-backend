@@ -1,0 +1,131 @@
+package org.cetide.hibiscus.domain.model.aggregate;
+
+import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+
+/**
+ * User 实体类
+ * @author Hibiscus-code-generate
+ */
+@TableName("hib_user")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+    * 主键ID
+    */
+    @TableId
+    private Long id;
+
+    /**
+    * 用户名（唯一）
+    */
+    @TableField("username")
+    private String username;
+
+    /**
+    * 电子邮箱（可选唯一）
+    */
+    @TableField("email")
+    private String email;
+
+    /**
+    * 加密后的密码
+    */
+    @TableField("password_hash")
+    private String passwordHash;
+
+    /**
+    * 用户头像 URL
+    */
+    @TableField("avatar_url")
+    private String avatarUrl;
+
+    /**
+    * 用户状态（ACTIVE / BANNED / DELETED）
+    */
+    @TableField("status")
+    private String status;
+
+    /**
+    * 创建时间
+    */
+    @TableField("created_at")
+    private LocalDateTime createdAt;
+
+    /**
+    * 更新时间
+    */
+    @TableField("updated_at")
+    private LocalDateTime updatedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}

@@ -2,6 +2,7 @@ package org.cetide.hibiscus.domain.model.aggregate;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.cetide.hibiscus.domain.model.aggregate.BaseEntity;
 import org.cetide.hibiscus.domain.model.enums.NotificationLevel;
 import org.cetide.hibiscus.domain.model.enums.NotificationType;
 

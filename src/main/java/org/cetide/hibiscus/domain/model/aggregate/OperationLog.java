@@ -7,6 +7,7 @@ import org.cetide.hibiscus.domain.model.enums.LogType;
 import org.cetide.hibiscus.domain.model.valueobject.Description;
 import org.cetide.hibiscus.domain.model.valueobject.Operator;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,9 @@ import java.util.Date;
  * @author heathcetide
  */
 @TableName("operation_log")
-public class OperationLog extends BaseEntity{
+public class OperationLog extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @TableId
     private Long id;

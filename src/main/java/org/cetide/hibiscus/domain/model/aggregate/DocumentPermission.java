@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_document_permission")
-public class DocumentPermission implements Serializable {
+public class DocumentPermission extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

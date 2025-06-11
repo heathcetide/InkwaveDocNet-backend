@@ -13,6 +13,7 @@
         <result column="status" property="status" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -23,7 +24,8 @@
             `anchor,`
             `status,`
             `created_at,`
-            `updated_at`
+            `updated_at,`
+            `deleted`
     </sql>
 
 </mapper>

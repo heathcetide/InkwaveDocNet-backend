@@ -7,11 +7,12 @@ CREATE TABLE `hib_user` (
                             `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                             `username` VARCHAR(100) NOT NULL UNIQUE COMMENT '用户名（唯一）',
                             `email` VARCHAR(100) UNIQUE COMMENT '电子邮箱（可选唯一）',
-                            `password_hash` VARCHAR(255) NOT NULL COMMENT '加密后的密码',
+                            `password` VARCHAR(255) NOT NULL COMMENT '加密后的密码',
                             `avatar_url` VARCHAR(255) COMMENT '用户头像 URL',
                             `status` VARCHAR(50) DEFAULT 'ACTIVE' COMMENT '用户状态（ACTIVE / BANNED / DELETED）',
                             `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                            `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
@@ -24,7 +25,8 @@ CREATE TABLE `hib_organization` (
                                     `description` TEXT COMMENT '组织描述',
                                     `owner_id` BIGINT NOT NULL COMMENT '组织拥有者（用户ID）',
                                     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                                    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                    `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
@@ -40,7 +42,8 @@ CREATE TABLE `hib_knowledge_base` (
                                       `organization_id` BIGINT COMMENT '所属组织ID',
                                       `cover_url` VARCHAR(255) COMMENT '封面图 URL',
                                       `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                      `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                                      `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                      `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
@@ -53,6 +56,9 @@ CREATE TABLE `hib_knowledge_base_collaborator` (
                                                    `user_id` BIGINT NOT NULL COMMENT '协作者用户ID',
                                                    `role` VARCHAR(50) DEFAULT 'EDITOR' COMMENT '角色（VIEWER / EDITOR / ADMIN）',
                                                    `joined_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间',
+                                                   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                                   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                                   `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）',
                                                    UNIQUE KEY `uk_kb_user` (`knowledge_base_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识库协作者表';
 
@@ -69,7 +75,8 @@ CREATE TABLE `hib_document` (
                                 `version` INT DEFAULT 1 COMMENT '当前版本号',
                                 `metadata` JSON COMMENT '扩展元数据',
                                 `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                                `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档与目录表';
 
 #  Document Version
@@ -79,7 +86,9 @@ CREATE TABLE `hib_document_version` (
                                         `version` INT NOT NULL COMMENT '版本号',
                                         `content` LONGTEXT COMMENT '文档内容（富文本或 Markdown）',
                                         `editor_id` BIGINT COMMENT '编辑人ID',
-                                        `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+                                        `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                        `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                        `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档版本表';
 
 #  Comment
@@ -91,7 +100,8 @@ CREATE TABLE `hib_document_comment` (
                                         `anchor` JSON COMMENT '锚点位置（块索引、偏移等）',
                                         `status` VARCHAR(50) DEFAULT 'ACTIVE' COMMENT '状态（ACTIVE / RESOLVED / DELETED）',
                                         `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                        `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                                        `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                        `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档批注表';
 
 # Operation Log
@@ -116,27 +126,49 @@ CREATE TABLE `hib_document_favorite` (
                                          `user_id` BIGINT NOT NULL COMMENT '用户ID',
                                          `document_id` BIGINT NOT NULL COMMENT '被收藏的文档ID',
                                          `favorited_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+                                         `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                         `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                         `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）',
                                          UNIQUE KEY `uk_user_doc` (`user_id`, `document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户文档收藏表';
 
 # Notification
-CREATE TABLE `hib_notification` (
-                                    `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-                                    `recipient_id` BIGINT NOT NULL COMMENT '接收用户ID',
-                                    `type` VARCHAR(100) NOT NULL COMMENT '通知类型（SYSTEM / COMMENT / INVITE / UPDATE）',
-                                    `title` VARCHAR(255) COMMENT '通知标题',
-                                    `content` TEXT COMMENT '通知内容',
-                                    `read` BOOLEAN DEFAULT FALSE COMMENT '是否已读',
-                                    `link_url` VARCHAR(255) COMMENT '跳转链接',
-                                    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户通知表';
+CREATE TABLE `hib_notification`
+(
+    `id`            BIGINT       NOT NULL COMMENT '主键ID（雪花算法生成）',
+    `user_id`       BIGINT       NOT NULL COMMENT '接收用户ID',
+    `type`          VARCHAR(32)  NOT NULL COMMENT '通知类型（如 SYSTEM、ADVICE 等）',
+    `title`         VARCHAR(255) NOT NULL COMMENT '通知标题',
+    `content`       TEXT COMMENT '通知内容',
+    `level`         VARCHAR(32)           DEFAULT 'NORMAL' COMMENT '通知级别（如 NORMAL、IMPORTANT、URGENT 等）',
+    `read`          BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '是否已读',
+    `business_id`   BIGINT                DEFAULT NULL COMMENT '关联业务ID',
+    `business_type` VARCHAR(64)           DEFAULT NULL COMMENT '关联业务类型',
+    `extra_data`    JSON                  DEFAULT NULL COMMENT '额外数据（JSON 格式）',
+    `send_time`     DATETIME              DEFAULT NULL COMMENT '发送时间',
+    `read_time`     DATETIME              DEFAULT NULL COMMENT '读取时间',
+    `deleted`       TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除（0：正常，1：删除）',
+    `created_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_user_id` (`user_id`),
+    INDEX `idx_type` (`type`),
+    INDEX `idx_level` (`level`),
+    INDEX `idx_read` (`read`),
+    INDEX `idx_send_time` (`send_time`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+    COMMENT = '通知表';
 
 # Tag
 CREATE TABLE `hib_tag` (
                            `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                            `name` VARCHAR(100) NOT NULL UNIQUE COMMENT '标签名称',
                            `color` VARCHAR(20) DEFAULT '#CCCCCC' COMMENT '标签颜色（Hex）',
-                           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+                           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                           `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='标签表';
 
 # Document Tag
@@ -144,6 +176,9 @@ CREATE TABLE `hib_document_tag` (
                                     `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                     `document_id` BIGINT NOT NULL COMMENT '文档ID',
                                     `tag_id` BIGINT NOT NULL COMMENT '标签ID',
+                                    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                    `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）',
                                     UNIQUE KEY `uk_doc_tag` (`document_id`, `tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档标签关联表';
 
@@ -156,7 +191,8 @@ CREATE TABLE `hib_document_template` (
                                          `creator_id` BIGINT NOT NULL COMMENT '创建人ID',
                                          `scope` VARCHAR(50) DEFAULT 'PRIVATE' COMMENT '模板可见性（SYSTEM / PUBLIC / PRIVATE）',
                                          `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                         `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+                                         `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                         `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档模板表';
 
 #  Document Permission
@@ -167,6 +203,9 @@ CREATE TABLE `hib_document_permission` (
                                            `permission` VARCHAR(50) NOT NULL COMMENT '权限类型（VIEW / EDIT / COMMENT / ADMIN）',
                                            `granted_by` BIGINT COMMENT '授权人ID',
                                            `granted_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '授权时间',
+                                           `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                           `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                           `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）',
                                            UNIQUE KEY `uk_doc_user` (`document_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档细粒度权限控制表';
 
@@ -178,5 +217,7 @@ CREATE TABLE `hib_webhook` (
                                `target_url` VARCHAR(255) NOT NULL COMMENT 'Webhook接收地址',
                                `enabled` BOOLEAN DEFAULT TRUE COMMENT '是否启用',
                                `secret` VARCHAR(255) COMMENT '签名密钥（用于校验）',
-                               `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+                               `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                               `deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Webhook 配置表';

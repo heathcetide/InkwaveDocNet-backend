@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_user")
-public class User implements Serializable {
+public class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,8 +38,8 @@ public class User implements Serializable {
     /**
     * 加密后的密码
     */
-    @TableField("password_hash")
-    private String passwordHash;
+    @TableField("password")
+    private String password;
 
     /**
     * 用户头像 URL
@@ -52,18 +52,6 @@ public class User implements Serializable {
     */
     @TableField("status")
     private String status;
-
-    /**
-    * 创建时间
-    */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
-    /**
-    * 更新时间
-    */
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
 
     public Long getId() {
         return id;
@@ -89,12 +77,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAvatarUrl() {
@@ -111,21 +99,5 @@ public class User implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

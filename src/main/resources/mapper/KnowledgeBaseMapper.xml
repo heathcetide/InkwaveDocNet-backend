@@ -14,6 +14,7 @@
         <result column="cover_url" property="coverUrl" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -25,7 +26,8 @@
             `organization_id,`
             `cover_url,`
             `created_at,`
-            `updated_at`
+            `updated_at,`
+            `deleted`
     </sql>
 
 </mapper>

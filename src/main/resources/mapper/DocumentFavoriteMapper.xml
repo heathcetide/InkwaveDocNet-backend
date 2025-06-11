@@ -9,13 +9,19 @@
         <result column="user_id" property="userId" />
         <result column="document_id" property="documentId" />
         <result column="favorited_at" property="favoritedAt" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
             `id,`
             `user_id,`
             `document_id,`
-            `favorited_at`
+            `favorited_at,`
+            `created_at,`
+            `updated_at,`
+            `deleted`
     </sql>
 
 </mapper>

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_tag")
-public class Tag implements Serializable {
+public class Tag extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,13 +34,6 @@ public class Tag implements Serializable {
     @TableField("color")
     private String color;
 
-    /**
-    * 创建时间
-    */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
-
     public Long getId() {
     return id;
     }
@@ -61,12 +54,5 @@ public class Tag implements Serializable {
 
     public void setColor(String color) {
     this.color = color;
-    }
-    public LocalDateTime getCreatedAt() {
-    return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
     }
 }

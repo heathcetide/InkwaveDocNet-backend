@@ -11,6 +11,9 @@
         <result column="permission" property="permission" />
         <result column="granted_by" property="grantedBy" />
         <result column="granted_at" property="grantedAt" />
+        <result column="deleted" property="deleted" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -19,7 +22,10 @@
             `user_id,`
             `permission,`
             `granted_by,`
-            `granted_at`
+            `granted_at,`
+            `deleted,`
+            `created_at,`
+            `updated_at`
     </sql>
 
 </mapper>

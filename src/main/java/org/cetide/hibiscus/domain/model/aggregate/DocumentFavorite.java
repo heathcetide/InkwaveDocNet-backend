@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_document_favorite")
-public class DocumentFavorite implements Serializable {
+public class DocumentFavorite extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

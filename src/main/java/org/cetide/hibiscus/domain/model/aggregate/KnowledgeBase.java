@@ -58,19 +58,6 @@ public class KnowledgeBase implements Serializable {
     @TableField("cover_url")
     private String coverUrl;
 
-    /**
-    * 创建时间
-    */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
-    /**
-    * 更新时间
-    */
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
-
-
     public Long getId() {
     return id;
     }
@@ -119,19 +106,5 @@ public class KnowledgeBase implements Serializable {
 
     public void setCoverUrl(String coverUrl) {
     this.coverUrl = coverUrl;
-    }
-    public LocalDateTime getCreatedAt() {
-    return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-    }
-    public LocalDateTime getUpdatedAt() {
-    return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
     }
 }

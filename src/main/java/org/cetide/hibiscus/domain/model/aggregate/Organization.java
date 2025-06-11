@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_organization")
-public class Organization implements Serializable {
+public class Organization extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,6 @@ public class Organization implements Serializable {
     */
     @TableField("owner_id")
     private Long ownerId;
-
-    /**
-    * 创建时间
-    */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
-    /**
-    * 更新时间
-    */
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
-
 
     public Long getId() {
     return id;
@@ -80,19 +67,5 @@ public class Organization implements Serializable {
 
     public void setOwnerId(Long ownerId) {
     this.ownerId = ownerId;
-    }
-    public LocalDateTime getCreatedAt() {
-    return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-    }
-    public LocalDateTime getUpdatedAt() {
-    return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
     }
 }

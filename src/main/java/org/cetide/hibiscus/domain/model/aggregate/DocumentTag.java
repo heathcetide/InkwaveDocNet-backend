@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_document_tag")
-public class DocumentTag implements Serializable {
+public class DocumentTag extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

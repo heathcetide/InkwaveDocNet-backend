@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_knowledge_base_collaborator")
-public class KnowledgeBaseCollaborator implements Serializable {
+public class KnowledgeBaseCollaborator extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

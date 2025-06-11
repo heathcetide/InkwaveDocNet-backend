@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Hibiscus-code-generate
  */
 @TableName("hib_webhook")
-public class Webhook implements Serializable {
+public class Webhook extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -51,13 +51,6 @@ public class Webhook implements Serializable {
     */
     @TableField("secret")
     private String secret;
-
-    /**
-    * 创建时间
-    */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
 
     public Long getId() {
     return id;
@@ -100,12 +93,5 @@ public class Webhook implements Serializable {
 
     public void setSecret(String secret) {
     this.secret = secret;
-    }
-    public LocalDateTime getCreatedAt() {
-    return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
     }
 }

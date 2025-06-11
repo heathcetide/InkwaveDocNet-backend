@@ -10,6 +10,9 @@
         <result column="user_id" property="userId" />
         <result column="role" property="role" />
         <result column="joined_at" property="joinedAt" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -17,7 +20,10 @@
             `knowledge_base_id,`
             `user_id,`
             `role,`
-            `joined_at`
+            `joined_at,`
+            `created_at,`
+            `updated_at,`
+            `deleted`
     </sql>
 
 </mapper>

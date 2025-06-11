@@ -9,13 +9,17 @@
         <result column="name" property="name" />
         <result column="color" property="color" />
         <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">
             `id,`
             `name,`
             `color,`
-            `created_at`
+            `created_at,`
+            `updated_at,`
+            `deleted`
     </sql>
 
 </mapper>

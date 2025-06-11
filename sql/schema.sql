@@ -2,6 +2,7 @@ CREATE DATABASE docnest_db;
 
 use docnest_db;
 
+#  User
 CREATE TABLE `hib_user` (
                             `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                             `username` VARCHAR(100) NOT NULL UNIQUE COMMENT '用户名（唯一）',
@@ -16,6 +17,7 @@ CREATE TABLE `hib_user` (
   COLLATE=utf8mb4_unicode_ci
     COMMENT='用户表';
 
+#  Organization
 CREATE TABLE `hib_organization` (
                                     `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                     `name` VARCHAR(255) NOT NULL UNIQUE COMMENT '组织名称（唯一）',
@@ -28,6 +30,7 @@ CREATE TABLE `hib_organization` (
   COLLATE=utf8mb4_unicode_ci
     COMMENT='组织/团队表';
 
+#  Knowledge Base
 CREATE TABLE `hib_knowledge_base` (
                                       `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                       `name` VARCHAR(255) NOT NULL COMMENT '知识库名称',
@@ -43,6 +46,7 @@ CREATE TABLE `hib_knowledge_base` (
   COLLATE=utf8mb4_unicode_ci
     COMMENT='知识库表';
 
+#  Knowledge Base Collaborator
 CREATE TABLE `hib_knowledge_base_collaborator` (
                                                    `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                                    `knowledge_base_id` BIGINT NOT NULL COMMENT '所属知识库ID',
@@ -52,6 +56,7 @@ CREATE TABLE `hib_knowledge_base_collaborator` (
                                                    UNIQUE KEY `uk_kb_user` (`knowledge_base_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='知识库协作者表';
 
+#  Document
 CREATE TABLE `hib_document` (
                                 `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                 `knowledge_base_id` BIGINT NOT NULL COMMENT '所属知识库ID',
@@ -67,6 +72,7 @@ CREATE TABLE `hib_document` (
                                 `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档与目录表';
 
+#  Document Version
 CREATE TABLE `hib_document_version` (
                                         `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                         `document_id` BIGINT NOT NULL COMMENT '文档ID',
@@ -76,6 +82,7 @@ CREATE TABLE `hib_document_version` (
                                         `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档版本表';
 
+#  Comment
 CREATE TABLE `hib_document_comment` (
                                         `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                         `document_id` BIGINT NOT NULL COMMENT '文档ID',
@@ -87,6 +94,7 @@ CREATE TABLE `hib_document_comment` (
                                         `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档批注表';
 
+# Operation Log
 CREATE TABLE `hib_operation_log` (
                                      `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                      `type` VARCHAR(100) NOT NULL COMMENT '操作类型（如：LOGIN、DOC_EDIT）',
@@ -102,6 +110,7 @@ CREATE TABLE `hib_operation_log` (
                                      `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='操作日志表';
 
+# Knowledge Base
 CREATE TABLE `hib_document_favorite` (
                                          `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                          `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -110,6 +119,7 @@ CREATE TABLE `hib_document_favorite` (
                                          UNIQUE KEY `uk_user_doc` (`user_id`, `document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户文档收藏表';
 
+# Notification
 CREATE TABLE `hib_notification` (
                                     `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                     `recipient_id` BIGINT NOT NULL COMMENT '接收用户ID',
@@ -121,6 +131,7 @@ CREATE TABLE `hib_notification` (
                                     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户通知表';
 
+# Tag
 CREATE TABLE `hib_tag` (
                            `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                            `name` VARCHAR(100) NOT NULL UNIQUE COMMENT '标签名称',
@@ -128,12 +139,15 @@ CREATE TABLE `hib_tag` (
                            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='标签表';
 
+# Document Tag
 CREATE TABLE `hib_document_tag` (
                                     `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                     `document_id` BIGINT NOT NULL COMMENT '文档ID',
                                     `tag_id` BIGINT NOT NULL COMMENT '标签ID',
                                     UNIQUE KEY `uk_doc_tag` (`document_id`, `tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档标签关联表';
+
+# Document Template
 CREATE TABLE `hib_document_template` (
                                          `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                          `title` VARCHAR(255) NOT NULL COMMENT '模板标题',
@@ -145,6 +159,7 @@ CREATE TABLE `hib_document_template` (
                                          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档模板表';
 
+#  Document Permission
 CREATE TABLE `hib_document_permission` (
                                            `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                            `document_id` BIGINT NOT NULL COMMENT '文档ID',
@@ -155,6 +170,7 @@ CREATE TABLE `hib_document_permission` (
                                            UNIQUE KEY `uk_doc_user` (`document_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文档细粒度权限控制表';
 
+#  Webhook
 CREATE TABLE `hib_webhook` (
                                `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
                                `organization_id` BIGINT COMMENT '所属组织ID',

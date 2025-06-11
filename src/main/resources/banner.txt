@@ -1,0 +1,6 @@
+${AnsiStyle.BOLD}${AnsiColor.BRIGHT_BLUE} __  __     __     ______     __     ______     ______     __  __     ______
+${AnsiColor.BRIGHT_BLUE}/\ \_\ \   /\ \   /\  == \   /\ \   /\  ___\   /\  ___\   /\ \/\ \   /\  ___\
+${AnsiColor.BLUE}\ \  __ \  \ \ \  \ \  __<   \ \ \  \ \___  \  \ \ \____  \ \ \_\ \  \ \___  \
+${AnsiColor.CYAN} \ \_\ \_\  \ \_\  \ \_____\  \ \_\  \/\_____\  \ \_____\  \ \_____\  \/\_____\
+${AnsiColor.BRIGHT_CYAN}  \/_/\/_/   \/_/   \/_____/   \/_/   \/_____/   \/_____/   \/_____/   \/_____/
+             程序员HeathCetide                  请关注:https://hibiscus.fit${AnsiStyle.NORMAL}${AnsiColor.DEFAULT}

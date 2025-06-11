@@ -1,0 +1,61 @@
+# 应用信息配置
+hibiscus:
+  name: Hibiscus-Backend
+  version: @project.version@  # Maven属性注入
+  build-time: "2025-05-26 20:15:23"
+  copyright:
+    owner: CodeForge Team
+    since-year: 2025
+    license: MIT
+
+server:
+  port: 8080
+
+spring:
+  #数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hibiscus_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1234
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+  #邮箱
+  mail:
+    host: smtp.zoho.com
+    port: 465
+    username: heath-cetide@zohomail.com
+    password: CTct288513832##
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.zoho.com
+    default-encoding: UTF-8
+    test-connection: true  # 启动时测试连接
+
+#ORM 配置
+mybatis-plus:
+  type-handlers-package: org.cetide.hibiscus.infrastructure.persistence.typehandler
+  mapper-locations: classpath*:/mapper/**/*.xml   # Mapper XML 文件路径
+  configuration:
+    map-underscore-to-camel-case: true            # 开启驼峰命名自动映射
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台打印 SQL
+  global-config:
+    banner: false                     # 关闭启动时的 banner
+    enable-sql-runner: false          # 是否启用 SqlRunner
+    db-config:
+      table-prefix: hib_                # 表前缀映射
+      id-type: auto                                # 主键策略
+      logic-delete-value: 1                        # 逻辑删除值
+      logic-not-delete-value: 0                    # 正常值
+
+#对象存储
+minio:
+  endpoint: http://47.108.177.82:9001
+  access-key: W5dV2m1MutQgUS21AlE7
+  secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ

@@ -1,6 +1,6 @@
 package org.cetide.hibiscus.common.config;
 
-import org.cetide.hibiscus.common.utils.servlet.ServletUtils;
+import org.cetide.hibiscus.infrastructure.utils.servlet.ServletUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;

@@ -37,6 +37,11 @@ spring:
             trust: smtp.zoho.com
     default-encoding: UTF-8
     test-connection: true  # 启动时测试连接
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+    timeout: 5000
 
 #ORM 配置
 mybatis-plus:

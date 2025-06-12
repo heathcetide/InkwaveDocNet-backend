@@ -11,7 +11,7 @@ import org.cetide.hibiscus.domain.model.aggregate.OperationLog;
 import org.cetide.hibiscus.domain.model.valueobject.Description;
 import org.cetide.hibiscus.domain.model.valueobject.Operator;
 import org.cetide.hibiscus.domain.service.OperationLogService;
-import org.cetide.hibiscus.common.utils.JsonUtils;
+import org.cetide.hibiscus.infrastructure.utils.JsonUtils;
 import org.springframework.stereotype.Component;
 
 import static org.cetide.hibiscus.common.constants.UserConstants.*;

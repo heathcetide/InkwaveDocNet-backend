@@ -44,7 +44,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .apiInfo(apiInfo)
                 .select()
                 //指定生成接口需要扫描的包
-                .apis(RequestHandlerSelectors.basePackage("org.cetide.hibiscus.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.cetide.hibiscus.interfaces.rest.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

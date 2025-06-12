@@ -1,7 +1,7 @@
 package org.cetide.hibiscus.common.config;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import org.cetide.hibiscus.common.utils.IdGenerator;
+import org.cetide.hibiscus.infrastructure.utils.IdGenerator;
 import org.springframework.stereotype.Component;
 
 @Component

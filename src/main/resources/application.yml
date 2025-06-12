@@ -60,7 +60,10 @@ mybatis-plus:
       logic-not-delete-value: 0                    # 正常值
 
 #对象存储
-minio:
-  endpoint: http://47.108.177.82:9001
-  access-key: W5dV2m1MutQgUS21AlE7
-  secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
+storage:
+  type: minio # 或 local
+  minio-endpoint: http://47.108.177.82:9001
+  minio-access-key: W5dV2m1MutQgUS21AlE7
+  minio-secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
+  minio-bucket: mybucket
+  local-base-path: /tmp/uploads

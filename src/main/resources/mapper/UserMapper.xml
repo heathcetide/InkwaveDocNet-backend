@@ -17,15 +17,31 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `username,`
-            `email,`
-            `password,`
-            `avatar_url,`
-            `status,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `username`,
+            `email`,
+            `password`,
+            `avatar_url`,
+            `status`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 
+    <select id="existsByUsername" resultType="java.lang.Boolean">
+        SELECT COUNT(1) FROM hib_user
+        WHERE username = #{username} AND deleted = 0
+    </select>
+
+    <select id="existsByEmail" resultType="java.lang.Boolean">
+        SELECT COUNT(1) FROM hib_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM hib_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
 </mapper>

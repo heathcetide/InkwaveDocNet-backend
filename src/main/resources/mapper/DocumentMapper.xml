@@ -21,18 +21,18 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `knowledge_base_id,`
-            `parent_id,`
-            `title,`
-            `type,`
-            `owner_id,`
-            `order,`
-            `status,`
-            `version,`
-            `metadata,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `knowledge_base_id`,
+            `parent_id`,
+            `title`,
+            `type`,
+            `owner_id`,
+            `order`,
+            `status`,
+            `version`,
+            `metadata`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 

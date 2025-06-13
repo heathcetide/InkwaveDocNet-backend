@@ -14,11 +14,11 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `name,`
-            `color,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `name`,
+            `color`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 

@@ -3,6 +3,7 @@ package org.cetide.hibiscus.infrastructure.persistence.converter;
 import org.cetide.hibiscus.application.dto.UserDTO;
 import org.cetide.hibiscus.domain.model.aggregate.User;
 import org.cetide.hibiscus.infrastructure.persistence.entity.UserEntity;
+import org.cetide.hibiscus.interfaces.rest.dto.UserVO;
 
 public class UserConverter {
 
@@ -47,5 +48,14 @@ public class UserConverter {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
         return dto;
+    }
+
+    public UserVO toUserVO(UserEntity entity) {
+        return new UserVO(
+                entity.getUsername(),
+                entity.getEmail(),
+                entity.getAvatarUrl(),
+                entity.getStatus()
+        );
     }
 }

@@ -16,13 +16,13 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `document_id,`
-            `version,`
-            `content,`
-            `editor_id,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `document_id`,
+            `version`,
+            `content`,
+            `editor_id`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 

@@ -18,15 +18,15 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `name,`
-            `description,`
-            `type,`
-            `owner_id,`
-            `organization_id,`
-            `cover_url,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `name`
+            `description`,
+            `type`,
+            `owner_id`,
+            `organization_id`,
+            `cover_url`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 

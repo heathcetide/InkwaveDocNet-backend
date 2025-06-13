@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -52,9 +54,14 @@ public class GlobalExceptionHandler {
      * 处理资源未找到异常（如访问了不存在的用户、商品等）
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<?> handleValidation(MethodArgumentNotValidException ex) {
-        String msg = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
-        return ApiResponse.error(ResponseCodeEnum.VALIDATION_ERROR.code(), msg);
+    public ApiResponse<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        return ApiResponse.badRequest(errors.toString());
     }
 
     /**
@@ -62,6 +69,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ApiResponse<?> handleOther(Exception ex) {
-        return ApiResponse.error(ResponseCodeEnum.SYSTEM_ERROR.code());
+        return ApiResponse.error(ex.getMessage());
     }
+
 }

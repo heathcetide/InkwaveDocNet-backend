@@ -17,14 +17,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `document_id,`
-            `user_id,`
-            `permission,`
-            `granted_by,`
-            `granted_at,`
-            `deleted,`
-            `created_at,`
+            `id`,
+            `document_id`,
+            `user_id`,
+            `permission`,
+            `granted_by`,
+            `granted_at`,
+            `deleted`,
+            `created_at`,
             `updated_at`
     </sql>
 

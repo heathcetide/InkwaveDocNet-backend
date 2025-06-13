@@ -1,21 +1,21 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
 import org.cetide.hibiscus.application.command.CreateUserCommand;
 import org.cetide.hibiscus.application.command.DeleteUserCommand;
+import org.cetide.hibiscus.application.command.SendVerificationCommand;
 import org.cetide.hibiscus.application.command.UpdateUserCommand;
 import org.cetide.hibiscus.application.dto.UserDTO;
 import org.cetide.hibiscus.application.service.UserApplicationService;
-import org.cetide.hibiscus.domain.model.aggregate.User;
 import org.cetide.hibiscus.common.request.PageRequest;
 import org.cetide.hibiscus.common.response.ApiResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.cetide.hibiscus.domain.service.UserService;
+import org.cetide.hibiscus.interfaces.rest.dto.UserRegisterEmailRequest;
+import org.cetide.hibiscus.interfaces.rest.dto.UserVO;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
+import static org.cetide.hibiscus.domain.model.enums.ResponseCodeEnum.SYSTEM_ERROR;
 
 /**
  * User 控制器，提供基础增删改查接口
@@ -29,6 +29,42 @@ public class UserController {
     public UserController(UserApplicationService userAppService) {
         this.userAppService = userAppService;
     }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, World!";
+    }
+
+    @GetMapping("/send-code/{email}")
+    @ApiOperation("发送验证码")
+    public ApiResponse<Boolean> sendVerificationCode(@PathVariable String email) {
+        SendVerificationCommand command = new SendVerificationCommand(email);
+        Boolean isSuccess = userAppService.sendVerificationCode(command);
+        if (isSuccess) {
+            return ApiResponse.success(true);
+        } else {
+            return ApiResponse.error(SYSTEM_ERROR.code(), "发送失败");
+        }
+    }
+
+    /**
+     * 邮箱注册账号
+     */
+    @PostMapping("/register/email")
+    @ApiOperation("邮箱注册账号")
+    public ApiResponse<UserVO> registerEmail(@RequestBody UserRegisterEmailRequest userRegisterEmailRequest, HttpServletRequest request) {
+        return ApiResponse.success(userAppService.registerByEmail(userRegisterEmailRequest, request));
+    }
+
+    /**
+     * 邮箱登录
+     */
+    @PostMapping("/login/email")
+    @ApiOperation("邮箱登录账号")
+    public ApiResponse<String> loginByEmail(@RequestBody UserRegisterEmailRequest userRegisterEmailRequest, HttpServletRequest request) {
+        return ApiResponse.success(userAppService.loginByEmail(userRegisterEmailRequest, request));
+    }
+
 
     @PostMapping
     public ApiResponse<Void> create(@RequestBody @Valid CreateUserCommand command) {

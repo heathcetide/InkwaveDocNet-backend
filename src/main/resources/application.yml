@@ -4,9 +4,17 @@ hibiscus:
   version: @project.version@  # Maven属性注入
   build-time: "2025-05-26 20:15:23"
   copyright:
-    owner: CodeForge Team
+    owner: 墨协 Team
     since-year: 2025
     license: MIT
+  # 自定义JWT配置
+  jwt:
+    secret: 6Vvq8$fG3jKlP2mNpQs5tRwUyXzA7B+C9D-E)  # 示例密钥，实际应使用生成的随机字符串
+    expiration: 86400000
+    header: Authorization
+    token-start: Bearer
+
+
 
 server:
   port: 8080
@@ -15,7 +23,7 @@ spring:
   #数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hibiscus_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/docnest_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 1234
     hikari:

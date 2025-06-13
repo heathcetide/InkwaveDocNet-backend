@@ -17,14 +17,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            `id,`
-            `organization_id,`
-            `event_type,`
-            `target_url,`
-            `enabled,`
-            `secret,`
-            `created_at,`
-            `updated_at,`
+            `id`,
+            `organization_id`,
+            `event_type`,
+            `target_url`,
+            `enabled`,
+            `secret`,
+            `created_at`,
+            `updated_at`,
             `deleted`
     </sql>
 

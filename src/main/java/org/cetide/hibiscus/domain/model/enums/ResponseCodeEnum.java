@@ -10,6 +10,8 @@ public enum ResponseCodeEnum {
     DB_ERROR("SYS_0002", "数据库异常"),
     SERVICE_UNAVAILABLE("SYS_0003", "服务不可用"),
     THIRD_PARTY_ERROR("SYS_0004", "第三方服务调用失败"),
+    // 限流
+    RATE_LIMIT_EXCEEDED("SYS_0005", "请求频率过高"),
 
     // ========== 参数与校验相关 ==========
     VALIDATION_ERROR("VAL_1001", "参数校验失败"),

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.cetide.hibiscus.domain.model.enums.ResponseCodeEnum.UNAUTHORIZED;
+
 /**
  * 全局异常处理器，统一拦截并处理项目中抛出的异常，返回结构化响应。
  *
@@ -62,6 +64,22 @@ public class GlobalExceptionHandler {
         });
 
         return ApiResponse.badRequest(errors.toString());
+    }
+
+    /**
+     * 处理权限认证异常
+     */
+    @ExceptionHandler(AuthorizationException.class)
+    public ApiResponse<?> handleAuthorizationException(AuthorizationException e) {
+        return ApiResponse.error(UNAUTHORIZED.code(),  e.getMessage());
+    }
+
+    /**
+     * 处理运行异常
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse<?> handleRuntimeException(RuntimeException e) {
+        return ApiResponse.error(UNAUTHORIZED.code(),  e.getMessage());
     }
 
     /**

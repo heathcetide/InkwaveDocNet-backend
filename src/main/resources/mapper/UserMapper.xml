@@ -11,6 +11,10 @@
         <result column="password" property="password" />
         <result column="avatar_url" property="avatarUrl" />
         <result column="status" property="status" />
+        <result column="theme_dark" property="themeDark" />
+        <result column="email_notifications" property="emailNotifications" />
+        <result column="language" property="language" />
+        <result column="bio" property="bio" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
         <result column="deleted" property="deleted"/>
@@ -23,6 +27,10 @@
             `password`,
             `avatar_url`,
             `status`,
+            `theme_dark`,
+            `email_notifications`,
+            `language`,
+            `bio`,
             `created_at`,
             `updated_at`,
             `deleted`
@@ -43,5 +51,12 @@
         <include refid="Base_Column_List"/>
         FROM hib_user
         WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM hib_user
+        WHERE username = #{username} AND deleted = 0
     </select>
 </mapper>

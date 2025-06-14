@@ -16,7 +16,7 @@
 
     <sql id="Base_Column_List">
         <#list fields as f>
-            `${f.originalName}<#if f_has_next>,</#if>`
+            `${f.originalName}`<#if f_has_next>,</#if>
         </#list>
     </sql>
 

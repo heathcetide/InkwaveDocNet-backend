@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "storage")
+@ConfigurationProperties(prefix = "hibiscus.storage")
 public class FileStorageProperties {
 
     /**
@@ -20,6 +20,13 @@ public class FileStorageProperties {
 
     // Local
     private String localBasePath;
+
+    // COS 配置
+    private String cosSecretId;
+    private String cosSecretKey;
+    private String cosRegion;
+    private String cosBucket;
+    private String cosUrlPrefix;
 
     public String getType() {
         return type;
@@ -67,5 +74,45 @@ public class FileStorageProperties {
 
     public void setLocalBasePath(String localBasePath) {
         this.localBasePath = localBasePath;
+    }
+
+    public String getCosSecretId() {
+        return cosSecretId;
+    }
+
+    public void setCosSecretId(String cosSecretId) {
+        this.cosSecretId = cosSecretId;
+    }
+
+    public String getCosSecretKey() {
+        return cosSecretKey;
+    }
+
+    public void setCosSecretKey(String cosSecretKey) {
+        this.cosSecretKey = cosSecretKey;
+    }
+
+    public String getCosRegion() {
+        return cosRegion;
+    }
+
+    public void setCosRegion(String cosRegion) {
+        this.cosRegion = cosRegion;
+    }
+
+    public String getCosBucket() {
+        return cosBucket;
+    }
+
+    public void setCosBucket(String cosBucket) {
+        this.cosBucket = cosBucket;
+    }
+
+    public String getCosUrlPrefix() {
+        return cosUrlPrefix;
+    }
+
+    public void setCosUrlPrefix(String cosUrlPrefix) {
+        this.cosUrlPrefix = cosUrlPrefix;
     }
 }

@@ -40,6 +40,29 @@ public class Organization extends BaseEntity implements Serializable {
     @TableField("owner_id")
     private Long ownerId;
 
+    /**
+     * 组织状态
+     */
+    @TableField("status")
+    private String status;
+
+    /**
+     * 组织是否公开
+     */
+    @TableField("published")
+    private Boolean published;
+
+    /**
+     * 组织创建时间
+     */
+    @TableField("max_members")
+    private Integer maxMembers;
+
+    /**
+     * 组织当前成员数
+     */
+    @TableField("current_members")
+    private Integer currentMembers;
     public Long getId() {
     return id;
     }
@@ -67,5 +90,37 @@ public class Organization extends BaseEntity implements Serializable {
 
     public void setOwnerId(Long ownerId) {
     this.ownerId = ownerId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
+
+    public Integer getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(Integer maxMembers) {
+        this.maxMembers = maxMembers;
+    }
+
+    public Integer getCurrentMembers() {
+        return currentMembers;
+    }
+
+    public void setCurrentMembers(Integer currentMembers) {
+        this.currentMembers = currentMembers;
     }
 }

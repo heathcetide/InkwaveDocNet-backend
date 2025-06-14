@@ -23,8 +23,13 @@ public class RedisUtils {
         redisTemplate.opsForValue().set(key, value, timeout, unit);
     }
 
-    public void set(String key, Object value, long timeout, TimeUnit unit) {
-        redisTemplate.opsForValue().set(key, value, timeout, unit);
+    public <T> void set(String key, T value, long timeout, TimeUnit unit) {
+        try  {
+            String json = objectMapper.writeValueAsString(value);
+            redisTemplate.opsForValue().set(key, json, timeout, unit);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean exists(String key) {

@@ -5,20 +5,26 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import org.cetide.hibiscus.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
+import static org.cetide.hibiscus.domain.model.enums.ResponseCodeEnum.SYSTEM_ERROR;
+
 @Service
 public class MinioStorageService implements FileStorageAdapter {
 
-    @Autowired
-    private MinioClient minioClient;
+    private final MinioClient minioClient;
 
-    @Autowired
-    private FileStorageProperties properties;
+    private final FileStorageProperties properties;
+
+    public MinioStorageService(MinioClient minioClient, FileStorageProperties properties) {
+        this.minioClient = minioClient;
+        this.properties = properties;
+    }
 
     @Override
     public String upload(MultipartFile file) {
@@ -34,9 +40,9 @@ public class MinioStorageService implements FileStorageAdapter {
                             .contentType(file.getContentType())
                             .build()
             );
-            return filename;
+            return properties.getMinioEndpoint() + '/' + properties.getMinioBucket() + '/' + filename;
         } catch (Exception e) {
-            throw new RuntimeException("MinIO上传失败", e);
+            throw new BusinessException(SYSTEM_ERROR.code(), "MinIO上传失败"+ e);
         }
     }
 

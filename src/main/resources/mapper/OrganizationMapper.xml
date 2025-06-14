@@ -12,6 +12,10 @@
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
         <result column="deleted" property="deleted" />
+        <result column="status" property="status"/>
+        <result column="published" property="published"/>
+        <result column="max_members" property="maxMembers"/>
+        <result column="current_members" property="currentMembers"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -19,6 +23,10 @@
             `name`,
             `description`,
             `owner_id`,
+            `status`,
+            `published`,
+            `max_members`,
+            `current_members`
             `created_at`,
             `updated_at`,
             `deleted`

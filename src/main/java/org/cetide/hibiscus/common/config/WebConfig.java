@@ -3,11 +3,14 @@ package org.cetide.hibiscus.common.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.cetide.hibiscus.common.interceptor.AnonymousInterceptor;
+import org.cetide.hibiscus.common.interceptor.UserInterceptor;
 import org.cetide.hibiscus.infrastructure.web.RequestIdFilter;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -28,14 +31,31 @@ import java.util.TimeZone;
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
+    private final AnonymousInterceptor anonymousInterceptor;
+
+    private final UserInterceptor userInterceptor;
+
+    public WebConfig(AnonymousInterceptor anonymousInterceptor, UserInterceptor userInterceptor) {
+        this.anonymousInterceptor = anonymousInterceptor;
+        this.userInterceptor = userInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userInterceptor)
+                .addPathPatterns("/api/users/delete-account","/api/users/info","/api/users/update","/api/users/logout","/api/users/upload-avatar","/api/users/delete-account","/api/users/preferences")
+                .addPathPatterns("/api/organization/**")
+                .addPathPatterns("/api/notification/**");
+    }
+
     /**
      * swagger文档配置
      */
     @Bean
     public Docket docket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("Hibiscus Backend Model API 文档")
-                .description("Hibiscus Backend 是一个快速开发应用，支持多种必需功能的SpringBoot应用")
+                .title("墨协 Backend API 文档")
+                .description("墨协 Backend")
                 .version("1.0.0")
                 .termsOfServiceUrl("https://hibiscus.fit")
                 .contact(new Contact("Hibiscus 开发团队", "https://hibiscus.fit", "19511899044@163.com"))
@@ -81,5 +101,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
     }
 }

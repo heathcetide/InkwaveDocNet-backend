@@ -69,9 +69,18 @@ public interface UserConstants {
 
     String EMPTY_PASSWORD_HASH = "moxie";
 
-    String NEW_USER_NICKNAME = "墨协用户-" + UUID.randomUUID().toString().replace("-", "").substring(4);
+    String NEW_USER_NICKNAME = "墨协用户-" + UUID.randomUUID().toString().replace("-", "")
+            .substring(UUID.randomUUID().toString().replace("-", "").length() - 10);
 
     String DEFAULT_USER = "https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/west/default_user.png";
+
+    String USER_LANGUAGE_DEFAULT = "zh-CN";
+
+    Boolean USER_NOTIFICATIONS_DEFAULT = true;
+
+    Boolean USER_THEME_DARK_DEFAULT = false;
+
+    String USER_BIO_DEFAULT = "此用户很懒, 什么也没有留下.....";
     /**
      * 构建新用户
      */
@@ -82,6 +91,10 @@ public interface UserConstants {
         user.setPassword(NEW_USER_PASSWORD + EMPTY_PASSWORD_HASH);
         user.setAvatarUrl(DEFAULT_USER);
         user.setStatus(USER_STATUS_ACTIVE);
+        user.setThemeDark(USER_THEME_DARK_DEFAULT);
+        user.setEmailNotifications(USER_NOTIFICATIONS_DEFAULT);
+        user.setLanguage(USER_LANGUAGE_DEFAULT);
+        user.setBio(USER_BIO_DEFAULT);
         return user;
     }
 }

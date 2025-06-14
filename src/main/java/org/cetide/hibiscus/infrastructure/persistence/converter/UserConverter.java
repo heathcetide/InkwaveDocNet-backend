@@ -55,7 +55,11 @@ public class UserConverter {
                 entity.getUsername(),
                 entity.getEmail(),
                 entity.getAvatarUrl(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getThemeDark(),
+                entity.getEmailNotifications(),
+                entity.getLanguage(),
+                entity.getBio()
         );
     }
 }

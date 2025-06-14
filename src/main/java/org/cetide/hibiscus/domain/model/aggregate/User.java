@@ -53,6 +53,30 @@ public class User extends BaseEntity implements Serializable {
     @TableField("status")
     private String status;
 
+    /**
+     * 主题（LIGHT / DARK）
+     */
+    @TableField("theme_dark")
+    private Boolean themeDark;
+
+    /**
+     * 邮箱通知（true / false）
+     */
+    @TableField("email_notifications")
+    private Boolean emailNotifications;
+
+    /**
+     * 语言（EN / ZH）
+     */
+    @TableField("language")
+    private String language;
+
+    /**
+     * 个性签名
+     */
+    @TableField("bio")
+    private String bio;
+
     public User(){
 
     }
@@ -129,6 +153,38 @@ public class User extends BaseEntity implements Serializable {
         this.status = status;
     }
 
+    public Boolean getThemeDark() {
+        return themeDark;
+    }
+
+    public void setThemeDark(Boolean themeDark) {
+        this.themeDark = themeDark;
+    }
+
+    public Boolean getEmailNotifications() {
+        return emailNotifications;
+    }
+
+    public void setEmailNotifications(Boolean emailNotifications) {
+        this.emailNotifications = emailNotifications;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     public void update(String username, String email, String avatarUrl, String status) {
         if (username != null) this.username = username;
         if (email != null) this.email = email;
@@ -141,5 +197,21 @@ public class User extends BaseEntity implements Serializable {
         this.setDeleted(true);
         this.status = "DELETED";
         this.setUpdatedAt(LocalDateTime.now());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", status='" + status + '\'' +
+                ", themeDark=" + themeDark +
+                ", emailNotifications=" + emailNotifications +
+                ", language='" + language + '\'' +
+                ", bio='" + bio + '\'' +
+                '}';
     }
 }

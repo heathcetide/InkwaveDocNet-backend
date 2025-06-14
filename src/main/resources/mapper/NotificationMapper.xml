@@ -11,7 +11,7 @@
         <result column="title" property="title"/>
         <result column="content" property="content"/>
         <result column="level" property="level" javaType="org.cetide.hibiscus.domain.model.enums.NotificationLevel"/>
-        <result column="read" property="read"/>
+        <result column="is_level" property="read"/>
         <result column="business_id" property="businessId"/>
         <result column="business_type" property="businessType"/>
         <result column="extra_data" property="extraData"/>
@@ -23,18 +23,14 @@
     </resultMap>
 
     <sql id="BaseColumnList">
-        id, user_id, type, title, content, level, read,
+        id, user_id, type, title, content, level, is_read,
         business_id, business_type, extra_data,
         send_time, read_time, deleted, created_at, updated_at
     </sql>
 
-    <select id="selectById" resultMap="NotificationResultMap">
-        SELECT <include refid="BaseColumnList"/> FROM hib_notification WHERE id = #{id} AND deleted = 0
-    </select>
-
     <insert id="insert" useGeneratedKeys="false">
         INSERT INTO hib_notification (
-            id, user_id, type, title, content, level, read,
+            id, user_id, type, title, content, level, is_read,
             business_id, business_type, extra_data,
             send_time, read_time, deleted, created_at, updated_at
         ) VALUES (
@@ -43,24 +39,6 @@
                      #{sendTime}, #{readTime}, #{deleted}, #{createdAt}, #{updatedAt}
                  )
     </insert>
-
-    <update id="updateById">
-        UPDATE hib_notification
-        SET
-            user_id = #{userId},
-            type = #{type},
-            title = #{title},
-            content = #{content},
-            level = #{level},
-            read = #{read},
-            business_id = #{businessId},
-            business_type = #{businessType},
-            extra_data = #{extraData},
-            send_time = #{sendTime},
-            read_time = #{readTime},
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = #{id} AND deleted = 0
-    </update>
 
     <delete id="deleteById">
         UPDATE hib_notification SET deleted = 1 WHERE id = #{id}

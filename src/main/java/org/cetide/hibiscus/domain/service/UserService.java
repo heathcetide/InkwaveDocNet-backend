@@ -10,4 +10,14 @@ import org.cetide.hibiscus.infrastructure.persistence.entity.UserEntity;
  */
 public interface UserService extends IService<UserEntity> {
 
+    /**
+     * 重置密码
+     */
+    void resetPassword(String emailOrPhone, String newPassword);
+
+    /**
+     * 根据邮箱获取用户信息
+     */
+    UserEntity getUserByEmail(String email);
 }
+

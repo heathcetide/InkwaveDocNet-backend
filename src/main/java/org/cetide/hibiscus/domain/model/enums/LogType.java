@@ -7,6 +7,16 @@ package org.cetide.hibiscus.domain.model.enums;
  */
 public enum LogType {
 
+    USER_LOGIN("用户登录"),
+
+    USER_REGISTER("用户注册"),
+
+    USER_UPDATE("用户信息更新"),
+
+    USER_DELETE("用户删除"),
+
+    USER_LOGOUT("用户退出登录"),
+
     AUTH("认证与授权"),
 
     SYSTEM_MESSAGE("系统管理"),

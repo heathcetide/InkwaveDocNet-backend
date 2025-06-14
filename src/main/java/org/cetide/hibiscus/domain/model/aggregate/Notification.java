@@ -1,7 +1,10 @@
 package org.cetide.hibiscus.domain.model.aggregate;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.cetide.hibiscus.domain.model.aggregate.BaseEntity;
 import org.cetide.hibiscus.domain.model.enums.NotificationLevel;
 import org.cetide.hibiscus.domain.model.enums.NotificationType;
@@ -17,6 +20,10 @@ import java.time.LocalDateTime;
 @TableName("hib_notification")
 public class Notification extends BaseEntity implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    @TableId(type = IdType.AUTO)
+    private Long id;
     /**
      * 接收用户ID
      */
@@ -50,14 +57,14 @@ public class Notification extends BaseEntity implements Serializable {
     /**
      * 是否已读
      */
-    @TableField("read")
-    private boolean read;
+    @TableField("is_read")
+    private boolean isRead;
 
     /**
      * 关联业务ID
      */
     @TableField("business_id")
-    private Long businessId;
+    private String businessId;
 
     /**
      * 关联业务类型
@@ -75,12 +82,14 @@ public class Notification extends BaseEntity implements Serializable {
      * 发送时间
      */
     @TableField("send_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendTime;
 
     /**
      * 读取时间
      */
     @TableField("read_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime readTime;
 
     public Long getUserId() {
@@ -124,18 +133,18 @@ public class Notification extends BaseEntity implements Serializable {
     }
 
     public boolean isRead() {
-        return read;
+        return isRead;
     }
 
     public void setRead(boolean read) {
-        this.read = read;
+        isRead = read;
     }
 
-    public Long getBusinessId() {
+    public String getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(Long businessId) {
+    public void setBusinessId(String businessId) {
         this.businessId = businessId;
     }
 
@@ -171,20 +180,90 @@ public class Notification extends BaseEntity implements Serializable {
         this.readTime = readTime;
     }
 
-    @Override
-    public String toString() {
-        return "Notification{" +
-                "userId=" + userId +
-                ", type=" + type +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", level=" + level +
-                ", read=" + read +
-                ", businessId=" + businessId +
-                ", businessType='" + businessType + '\'' +
-                ", extraData='" + extraData + '\'' +
-                ", sendTime=" + sendTime +
-                ", readTime=" + readTime +
-                '}';
+    public Long getId() {
+        return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Builder 静态内部类
+    public static class Builder {
+        private final Notification notification;
+
+        public Builder() {
+            notification = new Notification();
+        }
+
+        public Builder userId(Long userId) {
+            notification.setUserId(userId);
+            return this;
+        }
+
+        public Builder type(NotificationType type) {
+            notification.setType(type);
+            return this;
+        }
+
+        public Builder title(String title) {
+            notification.setTitle(title);
+            return this;
+        }
+
+        public Builder content(String content) {
+            notification.setContent(content);
+            return this;
+        }
+
+        public Builder level(NotificationLevel level) {
+            notification.setLevel(level);
+            return this;
+        }
+
+        public Builder read(boolean read) {
+            notification.setRead(read);
+            return this;
+        }
+
+        public Builder businessId(String businessId) {
+            notification.setBusinessId(businessId);
+            return this;
+        }
+
+        public Builder businessType(String businessType) {
+            notification.setBusinessType(businessType);
+            return this;
+        }
+
+        public Builder extraData(String extraData) {
+            notification.setExtraData(extraData);
+            return this;
+        }
+
+        public Builder sendTime(LocalDateTime sendTime) {
+            notification.setSendTime(sendTime);
+            return this;
+        }
+
+        public Builder readTime(LocalDateTime readTime) {
+            notification.setReadTime(readTime);
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            notification.setCreatedAt(createdAt);
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            notification.setUpdatedAt(updatedAt);
+            return this;
+        }
+        public Notification build() {
+            return notification;
+        }
+    }
+
+
 }

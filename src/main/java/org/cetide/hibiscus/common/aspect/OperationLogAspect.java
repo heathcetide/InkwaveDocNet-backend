@@ -14,6 +14,9 @@ import org.cetide.hibiscus.domain.service.OperationLogService;
 import org.cetide.hibiscus.infrastructure.utils.JsonUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.cetide.hibiscus.common.constants.UserConstants.*;
 
 /**
@@ -71,8 +74,17 @@ public class OperationLogAspect {
         log.setDescription(new Description(loggable.value()));
         log.setOperator(new Operator(RequestContext.get(CURRENT_USERNAME, String.class, DEFAULT_USERNAME)));
         log.setSuccess(ex == null);
-        log.setParams(JsonUtils.toJson(jp.getArgs()));
-        log.setResult(JsonUtils.toJson(result));
+        try{
+            log.setParams(JsonUtils.toJson(jp.getArgs()));
+        }catch (Exception e){
+            log.setParams(e.getMessage());
+        }
+        try{
+            log.setResult(JsonUtils.toJson(result));
+        }catch (Exception e){
+            log.setResult(e.getMessage());
+        }
+        log.setTimestamp(new Date(System.currentTimeMillis()));
         logService.save(log);
     }
 } 

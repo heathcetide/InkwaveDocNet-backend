@@ -1,6 +1,8 @@
 package org.cetide.hibiscus.domain.model.aggregate;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -19,7 +21,7 @@ public class OrgInvite extends BaseEntity implements Serializable {
     /**
     * 主键ID
     */
-    @TableId
+    @TableId(type = IdType.INPUT)
     private Long id;
 
     /**

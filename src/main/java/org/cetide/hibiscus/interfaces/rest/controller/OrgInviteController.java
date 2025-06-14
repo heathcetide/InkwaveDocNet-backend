@@ -1,5 +1,6 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
+import io.swagger.annotations.Api;
 import org.cetide.hibiscus.domain.model.aggregate.OrgInvite;
 import org.cetide.hibiscus.domain.service.OrgInviteService;
 import org.cetide.hibiscus.common.request.PageRequest;
@@ -14,8 +15,9 @@ import java.util.List;
  * OrgInvite 控制器，提供基础增删改查接口
  * @author Hibiscus-code-generate
  */
+@Api(tags = "OrgInvite 控制器")
 @RestController
-@RequestMapping("/api/orginvite")
+@RequestMapping("/api/org_invite")
 public class OrgInviteController {
 
     private final OrgInviteService orgInviteService;

@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MinioClientConfig {
 
+    /**
+     * Minio客户端
+     */
     @Bean
     public MinioClient minioClient(FileStorageProperties properties) {
         return MinioClient.builder()

@@ -15,7 +15,7 @@ import java.util.List;
  * @author Hibiscus-code-generate
  */
 @RestController
-@RequestMapping("/api/documentcomment")
+@RequestMapping("/api/document_comment")
 public class DocumentCommentController {
 
     private final DocumentCommentService documentCommentService;

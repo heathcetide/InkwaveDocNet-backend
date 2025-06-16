@@ -369,6 +369,7 @@ public class UserApplicationService {
     public String uploadAvatar(MultipartFile file) {
         String upload = fileStorageAdapter.upload(file);
         UserEntity user = userMapper.selectById(AuthContext.getCurrentUser().getId());
+        fileStorageAdapter.delete(user.getAvatarUrl());
         user.setAvatarUrl(upload);
         userMapper.updateById(user);
         // 删除旧缓存

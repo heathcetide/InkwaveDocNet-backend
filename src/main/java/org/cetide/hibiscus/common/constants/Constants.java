@@ -171,4 +171,19 @@ public interface Constants {
      * 消息通知已读
      */
     String IS_READ_MESSAGE = "1";
+
+    /**
+     * minio存储类型
+     */
+    String STORAGE_TYPE_MINIO = "minio";
+
+    /**
+     * 本地存储类型
+     */
+    String STORAGE_TYPE_LOCAL = "local";
+
+    /**
+     * cos存储类型
+     */
+    String STORAGE_TYPE_COS = "cos";
 }

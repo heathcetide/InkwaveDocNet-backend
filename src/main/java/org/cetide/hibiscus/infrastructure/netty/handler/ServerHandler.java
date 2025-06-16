@@ -45,6 +45,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
                 System.out.println(DOCUMENT_LEAVE.getDescription());
 //                handleDocumentLeave(message);
                 break;
+            case MOUSE_MOVE:
+                System.out.println(MOUSE_MOVE.getDescription());
+                handleMouseMove(message);
+                break;
             case CONTENT_INSERT:
                 System.out.println(CONTENT_INSERT.getDescription());
                 handleContentInsert(message);
@@ -95,6 +99,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
             default:
                 sendError(message.getUserId(), "未知的消息类型");
         }
+    }
+
+    private void handleMouseMove(NettyMessage message) {
+        // 检查读权限 permissionService.checkPermission
+
+        NettyMessage notice = new NettyMessage.Builder()
+                .type(MOUSE_MOVE)
+                .docId(message.getDocId())
+                .userId(message.getUserId())
+                .build();
+        notice.getPayload().put("position", message.getPayload().get("position"));
+        sessionManager.broadcastToDocument(message.getDocId(), notice.toJsonString());
     }
 
     /**

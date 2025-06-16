@@ -1,20 +1,34 @@
 package org.cetide.hibiscus.infrastructure.storage;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.cetide.hibiscus.common.constants.Constants.*;
+
+/**
+ * 存储服务配置
+ */
 @Configuration
 public class StorageConfig {
 
-
+    /**
+     * Minio存储服务
+     */
     private final MinioStorageService minioStorageService;
 
+    /**
+     * 本地存储服务
+     */
     private final LocalStorageService localStorageService;
 
+    /**
+     * 腾讯云存储
+     */
     private final CosStorageService cosStorageService;
 
+    /**
+     * 文件存储属性
+     */
     private final FileStorageProperties properties;
 
     public StorageConfig(MinioStorageService minioStorageService, LocalStorageService localStorageService, CosStorageService cosStorageService, FileStorageProperties properties) {
@@ -24,12 +38,15 @@ public class StorageConfig {
         this.properties = properties;
     }
 
+    /**
+     * 获取文件存储服务
+     */
     @Bean
     public FileStorageAdapter fileStorageAdapter() {
         return switch (properties.getType()) {
-            case "minio" -> minioStorageService;
-            case "local" -> localStorageService;
-            case "cos" -> cosStorageService;
+            case STORAGE_TYPE_MINIO -> minioStorageService;
+            case STORAGE_TYPE_LOCAL -> localStorageService;
+            case STORAGE_TYPE_COS -> cosStorageService;
             default -> throw new IllegalArgumentException("不支持的存储类型: " + properties.getType());
         };
     }

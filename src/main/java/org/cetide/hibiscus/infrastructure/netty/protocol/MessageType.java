@@ -6,6 +6,7 @@ public enum MessageType {
     DOCUMENT_UPDATE("文档更新"),
     DOCUMENT_CHUNK("文档分片"),
 
+    MOUSE_MOVE("移动鼠标"),
     CONTENT_INSERT("插入内容"),
     CONTENT_DELETE("删除内容"),
     CONTENT_REPLACE("替换内容"),

@@ -11,10 +11,13 @@
         <result column="title" property="title" />
         <result column="type" property="type" />
         <result column="owner_id" property="ownerId" />
-        <result column="order" property="order" />
+        <result column="sort_order" property="sortOrder" />
         <result column="status" property="status" />
         <result column="version" property="version" />
         <result column="metadata" property="metadata" />
+        <result column="level" property="level" />
+        <result column="published" property="published" />
+        <result column="current_version_id" property="currentVersionId" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
         <result column="deleted" property="deleted" />
@@ -27,9 +30,12 @@
             `title`,
             `type`,
             `owner_id`,
-            `order`,
+            `sort_order`,
             `status`,
             `version`,
+            `level`,
+            `published`,
+            `current_version_id`
             `metadata`,
             `created_at`,
             `updated_at`,

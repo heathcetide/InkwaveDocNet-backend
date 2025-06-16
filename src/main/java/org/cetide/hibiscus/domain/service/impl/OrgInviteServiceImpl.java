@@ -1,5 +1,6 @@
 package org.cetide.hibiscus.domain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.cetide.hibiscus.domain.model.aggregate.OrgInvite;
 import org.cetide.hibiscus.infrastructure.persistence.mapper.OrgInviteMapper;
@@ -17,22 +18,29 @@ import java.time.LocalDateTime;
 @Service
 public class OrgInviteServiceImpl extends ServiceImpl<OrgInviteMapper, OrgInvite> implements OrgInviteService {
 
-    public OrgInvite createInvite(Long inviterId, String role, Integer maxUses, LocalDateTime expiresAt) {
+    @Override
+    public OrgInvite createInvite(Long organizationId, Long inviterId, String role, Integer maxUses, LocalDateTime expiresAt) {
         OrgInvite invite = new OrgInvite();
-        invite.setOrganizationId(SnowflakeIdGenerator.nextId());
+        invite.setId(SnowflakeIdGenerator.nextId());
         invite.setInviterId(inviterId);
+        invite.setOrganizationId(organizationId);
         invite.setRole(role);
         invite.setMaxUses(maxUses);
         invite.setUsedCount(0);
         invite.setExpiresAt(expiresAt);
         save(invite); // 插入后自动生成ID
-
         // 生成短码
         String shortCode = InviteCodeUtil.encode(invite.getId());
         invite.setInviteCode(shortCode);
         updateById(invite); // 保存邀请码字段
-
         return invite;
+    }
+
+    @Override
+    public OrgInvite getOrgIdByCode(String code) {
+        LambdaQueryWrapper<OrgInvite> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrgInvite::getInviteCode, code);
+        return getOne(queryWrapper);
     }
 
 //    public String buildInviteLink(String code) {

@@ -45,7 +45,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addInterceptor(userInterceptor)
                 .addPathPatterns("/api/users/delete-account","/api/users/info","/api/users/update","/api/users/logout","/api/users/upload-avatar","/api/users/delete-account","/api/users/preferences")
                 .addPathPatterns("/api/organization/**")
-                .addPathPatterns("/api/notification/**");
+                .addPathPatterns("/api/notification/**")
+                .addPathPatterns("/api/org_invite/**").excludePathPatterns("/api/org_invite/link/**")
+                .addPathPatterns("/api/organization_member/my-organizations")
+                .addPathPatterns("/api/knowledge_base/**")
+                .addPathPatterns("/api/document/**")
+                .addPathPatterns("/api/document_template/create");
     }
 
     /**

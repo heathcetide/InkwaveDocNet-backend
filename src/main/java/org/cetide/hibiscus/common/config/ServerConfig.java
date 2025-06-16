@@ -1,6 +1,7 @@
 package org.cetide.hibiscus.common.config;
 
 import org.cetide.hibiscus.infrastructure.utils.servlet.ServletUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,26 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class ServerConfig {
+
+    @Value("${hibiscus.invite.base-url}")
+    private String inviteBaseUrl;
+
+    @Value("${hibiscus.invite.font-url}")
+    private String fontUrl;
+
+    /**
+     * 获取配置的邀请链接前缀
+     */
+    public String getInviteBaseUrl() {
+        return inviteBaseUrl;
+    }
+
+    /**
+     * 获取配置的邀请链接字体文件地址
+     */
+    public String getFontUrl() {
+        return fontUrl;
+    }
 
     /**
      * 获取完整的请求路径，包括：域名，端口，上下文访问路径

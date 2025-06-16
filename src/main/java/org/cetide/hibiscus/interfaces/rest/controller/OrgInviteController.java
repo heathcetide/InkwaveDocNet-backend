@@ -1,14 +1,27 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.cetide.hibiscus.application.service.OrgInviteApplicationService;
+import org.cetide.hibiscus.common.config.ServerConfig;
+import org.cetide.hibiscus.common.context.AuthContext;
 import org.cetide.hibiscus.domain.model.aggregate.OrgInvite;
 import org.cetide.hibiscus.domain.service.OrgInviteService;
 import org.cetide.hibiscus.common.request.PageRequest;
 import org.cetide.hibiscus.common.response.ApiResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.cetide.hibiscus.interfaces.rest.dto.InviteCreateDTO;
+import org.cetide.hibiscus.interfaces.rest.dto.InviteResponseVO;
+import org.cetide.hibiscus.interfaces.rest.dto.OrgInviteVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -20,81 +33,70 @@ import java.util.List;
 @RequestMapping("/api/org_invite")
 public class OrgInviteController {
 
-    private final OrgInviteService orgInviteService;
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(OrgInviteController.class);
 
-    public OrgInviteController(OrgInviteService orgInviteService) {
-        this.orgInviteService = orgInviteService;
+    /**
+     * OrgInviteService
+     */
+    private final OrgInviteApplicationService orgInviteApplicationService;
+
+    /**
+     * 服务器配置
+     */
+    private final ServerConfig serverConfig;
+
+    public OrgInviteController(OrgInviteApplicationService orgInviteApplicationService, ServerConfig serverConfig) {
+        this.orgInviteApplicationService = orgInviteApplicationService;
+        this.serverConfig = serverConfig;
+    }
+
+
+    /**
+     * 创建邀请码
+     */
+    @ApiOperation("创建邀请码")
+    @PostMapping("/create")
+    public ApiResponse<InviteResponseVO> createInvite(@RequestBody InviteCreateDTO dto) {
+        return ApiResponse.success(orgInviteApplicationService.createInvite(dto));
     }
 
     /**
-     * 新增 OrgInvite 记录
-     * @param entity 实体对象
-     * @return 是否新增成功
+     * 跳转到邀请页面
      */
-    @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody OrgInvite entity) {
-        return ApiResponse.success(orgInviteService.save(entity));
-    }
-
-    /**
-     * 更新 OrgInvite 记录
-     * @param entity 实体对象（必须包含主键 ID）
-     * @return 是否更新成功
-     */
-    @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody OrgInvite entity) {
-        return ApiResponse.success(orgInviteService.updateById(entity));
-    }
-
-    /**
-     * 删除指定 ID 的 OrgInvite 记录
-     * @param id 主键 ID
-     * @return 是否删除成功
-     */
-    @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
-        return ApiResponse.success(orgInviteService.removeById(id));
-    }
-
-    /**
-     * 根据 ID 获取 OrgInvite 详情
-     * @param id 主键 ID
-     * @return 匹配的实体对象
-     */
-    @GetMapping("/{id}")
-    public ApiResponse<OrgInvite> getById(@PathVariable("id") Integer id) {
-        return ApiResponse.success(orgInviteService.getById(id));
-    }
-
-    /**
-     * 获取所有 OrgInvite 列表（不分页）
-     * @return 实体列表
-     */
-    @GetMapping
-    public ApiResponse<List<OrgInvite>> list() {
-        return ApiResponse.success(orgInviteService.list());
-    }
-
-    /**
-     * 分页查询 OrgInvite 列表
-     * 支持关键字模糊搜索与排序
-     * @param pageRequest 分页与筛选请求参数
-     * @return 分页结果
-     */
-    @PostMapping("/page")
-    public ApiResponse<Page<OrgInvite>> getPage(@RequestBody PageRequest pageRequest) {
-        Page<OrgInvite> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
-        QueryWrapper<OrgInvite> wrapper = new QueryWrapper<>();
-
-        if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段
+    @GetMapping("/link/{code}")
+    @ApiOperation("跳转到邀请页面")
+    public ResponseEntity<Void> redirectToInvitePage(@PathVariable String code) {
+        OrgInvite invite = orgInviteApplicationService.getByCode(code);
+        if (invite == null || invite.isExpired()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        // 构造前端页面地址
+        URI redirectUri = URI.create(serverConfig.getFontUrl() + "?code=" + code);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(redirectUri);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 重定向
+    }
 
-        if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {
-            wrapper.orderBy(true, "asc".equalsIgnoreCase(pageRequest.getSortOrder()), pageRequest.getSortBy());
-        }
+    /**
+     * 验证邀请码
+     */
+    @GetMapping("/validate/{code}")
+    @ApiOperation("验证邀请码")
+    public ApiResponse<OrgInviteVO> validateInvite(@PathVariable String code) {
+        return ApiResponse.success(orgInviteApplicationService.validateInviteCode(code));
+    }
 
-        return ApiResponse.success(orgInviteService.page(page, wrapper));
+    /**
+     * 使用邀请码
+     */
+    @PostMapping("/use/{code}")
+    @ApiOperation("使用邀请码")
+    public ApiResponse<Void> useInvite(@PathVariable String code) {
+        orgInviteApplicationService.useInvite(code, AuthContext.getCurrentUser().getId());
+        return ApiResponse.success();
     }
 
 }

@@ -1,11 +1,23 @@
 package org.cetide.hibiscus.infrastructure.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class RedisUtils {
@@ -13,6 +25,7 @@ public class RedisUtils {
 
     private final ObjectMapper objectMapper;
 
+    private final static Logger log = LoggerFactory.getLogger(RedisUtils.class);
 
     public RedisUtils(RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
@@ -41,6 +54,13 @@ public class RedisUtils {
      */
     public void set(String key, Object value, long time) {
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 设置缓存
+     */
+    public void set(String key, Object value, Duration duration) {
+        redisTemplate.opsForValue().set(key, value, duration);
     }
 
     /**
@@ -106,6 +126,13 @@ public class RedisUtils {
     }
 
     /**
+     * 设置过期时间
+     */
+    public Boolean expire(String key, Duration duration){
+        return redisTemplate.expire(key, duration);
+    }
+
+    /**
      * 获取过期时间
      */
     public Long getExpire(String key) {
@@ -120,6 +147,13 @@ public class RedisUtils {
      */
     public Long increment(String key, long delta) {
         return redisTemplate.opsForValue().increment(key, delta);
+    }
+
+    /**
+     * 设置值，如果 key 不存在则设置成功（分布式锁的典型用法）
+     */
+    public void setIfAbsent(String key, String value) {
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
     /**
@@ -193,4 +227,55 @@ public class RedisUtils {
     public Double getRankingScore(String ranking, String user) {
         return redisTemplate.opsForZSet().score(ranking, user);
     }
-} 
+
+    // 队列操作
+
+    public void push(String queueName, Object value) {
+        redisTemplate.opsForList().rightPush(queueName, value);
+    }
+
+    public Object pop(String queueName) {
+        return redisTemplate.opsForList().leftPop(queueName);
+    }
+
+    public Object peek(String queueName) {
+        return redisTemplate.opsForList().index(queueName, 0);
+    }
+
+    public long size(String queueName) {
+        return redisTemplate.opsForList().size(queueName);
+    }
+
+    public void clear(String queueName) {
+        redisTemplate.delete(queueName);
+    }
+
+    public List<String> multiGet(List<String> redisKeys) {
+        List<Object> results = redisTemplate.opsForValue().multiGet(redisKeys);
+        // 类型安全转换
+        assert results != null;
+        return results.stream()
+                .map(obj -> obj != null ? obj.toString() : null)
+                .collect(Collectors.toList());
+    }
+
+    public Set<String> scanKeys(String pattern) {
+        return redisTemplate.execute((RedisConnection connection) -> {
+            Set<String> keys = new HashSet<>();
+            Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match(pattern).count(1000).build());
+            try {
+                while (cursor.hasNext()) {
+                    keys.add(new String(cursor.next(), StandardCharsets.UTF_8));
+                }
+            } finally {
+                try {
+                    cursor.close();
+                } catch (IOException e) {
+                    log.info("关闭游标时发生异常");
+                }
+            }
+            return keys;
+        });
+    }
+
+}

@@ -15,6 +15,8 @@ import org.cetide.hibiscus.infrastructure.persistence.entity.UserEntity;
 import org.cetide.hibiscus.interfaces.rest.dto.CreateOrganizationRequest;
 import org.cetide.hibiscus.interfaces.rest.dto.OrganizationVO;
 import org.cetide.hibiscus.interfaces.rest.dto.UpdateOrganizationRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +31,19 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/organization")
 public class OrganizationController {
 
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
+
+    /**
+     * 组织服务
+     */
     private final OrganizationApplicationService organizationApplicationService;
 
+    /**
+     * Redis 工具类
+     */
     private final RedisUtils redisUtils;
 
     public OrganizationController(OrganizationApplicationService organizationApplicationService, RedisUtils redisUtils) {
@@ -38,6 +51,11 @@ public class OrganizationController {
         this.redisUtils = redisUtils;
     }
 
+    /**
+     * 创建组织
+     * @param request 创建组织请求参数
+     * @return 创建成功的组织信息
+     */
     @PostMapping
     @ApiOperation("创建组织")
     public ApiResponse<OrganizationVO> createOrganization(@RequestBody CreateOrganizationRequest request) {
@@ -49,12 +67,22 @@ public class OrganizationController {
         return ApiResponse.success(organizationApplicationService.createOrganization(request, currentUser.getId()));
     }
 
+    /**
+     * 获取组织详情
+     * @param id 组织ID
+     * @return 组织详情
+     */
     @GetMapping("/{id}")
     @ApiOperation("获取组织详情")
     public ApiResponse<OrganizationVO> getOrganization(@PathVariable String id) {
         return ApiResponse.success(organizationApplicationService.getOrganizationById(id));
     }
 
+    /**
+     * 切换当前组织
+     * @param id 组织ID
+     * @return 切换成功
+     */
     @PostMapping("/switch/{id}")
     @ApiOperation("切换当前组织")
     public ApiResponse<Void> switchOrganization(@PathVariable String id) {
@@ -63,6 +91,10 @@ public class OrganizationController {
         return ApiResponse.success();
     }
 
+    /**
+     * 获取当前组织信息
+     * @return 当前组织信息
+     */
     @GetMapping("/current")
     @ApiOperation("获取当前组织信息")
     public ApiResponse<OrganizationVO> getCurrentOrganization() {
@@ -75,6 +107,10 @@ public class OrganizationController {
         return ApiResponse.success(organization);
     }
 
+    /**
+     * 获取当前用户创建的组织列表
+     * @return 组织列表
+     */
     @GetMapping("/my")
     @ApiOperation("获取当前用户创建的组织列表")
     public ApiResponse<List<OrganizationVO>> getMyOrganizations() {
@@ -83,6 +119,10 @@ public class OrganizationController {
         return ApiResponse.success(list);
     }
 
+    /**
+     * 获取组织列表
+     * @return 组织列表
+     */
     @PostMapping("/{id}/delete")
     @ApiOperation("解散团队")
     public ApiResponse<String> deleteOrganization(@PathVariable Long id) {
@@ -94,6 +134,12 @@ public class OrganizationController {
         }
     }
 
+    /**
+     * 更新组织信息
+     * @param id 组织ID
+     * @param request 更新组织信息请求参数
+     * @return 更新后的组织信息
+     */
     @PostMapping("/{id}/update")
     @ApiOperation("更改团队信息")
     public ApiResponse<OrganizationVO> updateOrganization(@PathVariable Long id, @RequestBody UpdateOrganizationRequest request) {

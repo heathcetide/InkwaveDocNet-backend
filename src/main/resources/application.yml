@@ -21,11 +21,14 @@ hibiscus:
     minio-secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
     minio-bucket: moxie
     local-base-path: /tmp/uploads
+  invite:
+    base-url: http://localhost:8080/api/org_invite/link/
+    font-url: http://localhost:3000/invite
 
 server:
   port: 8080
   servlet:
-    context-path: /v1
+    context-path:
 
 spring:
   servlet:
@@ -41,6 +44,11 @@ spring:
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 20
+  #mongodb数据库
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/docnest_db
+
   #邮箱
   mail:
     host: smtp.zoho.com

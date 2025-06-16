@@ -15,7 +15,7 @@ import java.util.List;
  * @author Hibiscus-code-generate
  */
 @RestController
-@RequestMapping("/api/documentversion")
+@RequestMapping("/api/document_version")
 public class DocumentVersionController {
 
     private final DocumentVersionService documentVersionService;

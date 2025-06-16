@@ -4,6 +4,7 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.models.auth.In;
 
 import java.time.LocalDateTime;
 
@@ -41,10 +42,10 @@ public class Document extends BaseEntity implements Serializable {
     private String title;
 
     /**
-    * 类型（DOC / FOLDER）
+    * 类型（DOC）
     */
     @TableField("type")
-    private String type;
+    private String type = "doc";
 
     /**
     * 文档所有者ID
@@ -55,8 +56,8 @@ public class Document extends BaseEntity implements Serializable {
     /**
     * 文档顺序排序值
     */
-    @TableField("order")
-    private Integer order;
+    @TableField("sort_order")
+    private Integer sortOrder;
 
     /**
     * 文档状态（ACTIVE / DELETED）
@@ -75,6 +76,24 @@ public class Document extends BaseEntity implements Serializable {
     */
     @TableField("metadata")
     private String metadata;
+
+    /**
+     * 文档层级
+     */
+    @TableField("level")
+    private Integer level;
+
+    /**
+     * 是否发布
+     */
+    @TableField("published")
+    private Boolean published;
+
+    /**
+     * 当前版本ID
+     */
+    @TableField("current_version_id")
+    private Long currentVersionId;
 
     public Long getId() {
     return id;
@@ -118,13 +137,15 @@ public class Document extends BaseEntity implements Serializable {
     public void setOwnerId(Long ownerId) {
     this.ownerId = ownerId;
     }
-    public Integer getOrder() {
-    return order;
+
+    public Integer getSortOrder() {
+        return sortOrder;
     }
 
-    public void setOrder(Integer order) {
-    this.order = order;
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
+
     public String getStatus() {
     return status;
     }
@@ -145,5 +166,29 @@ public class Document extends BaseEntity implements Serializable {
 
     public void setMetadata(String metadata) {
     this.metadata = metadata;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
+
+    public Long getCurrentVersionId() {
+        return currentVersionId;
+    }
+
+    public void setCurrentVersionId(Long currentVersionId) {
+        this.currentVersionId = currentVersionId;
     }
 }

@@ -122,4 +122,8 @@ public class OrgInvite extends BaseEntity implements Serializable {
     public void setExpiresAt(LocalDateTime expiresAt) {
     this.expiresAt = expiresAt;
     }
+
+    public boolean isExpired() {
+        return expiresAt != null && expiresAt.isBefore(LocalDateTime.now());
+    }
 }

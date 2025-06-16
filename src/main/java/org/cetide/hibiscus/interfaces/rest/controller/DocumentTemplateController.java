@@ -1,21 +1,22 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
-import org.cetide.hibiscus.domain.model.aggregate.DocumentTemplate;
-import org.cetide.hibiscus.common.request.PageRequest;
-import org.cetide.hibiscus.common.response.ApiResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.cetide.hibiscus.common.context.AuthContext;
+import org.cetide.hibiscus.common.response.ApiResponse;
+import org.cetide.hibiscus.domain.model.aggregate.DocumentTemplate;
 import org.cetide.hibiscus.domain.service.DocumentTemplateService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * DocumentTemplate 控制器，提供基础增删改查接口
  * @author Hibiscus-code-generate
  */
+@Api(tags = "DocumentTemplate 控制器")
 @RestController
-@RequestMapping("/api/documenttemplate")
+@RequestMapping("/api/document_template")
 public class DocumentTemplateController {
 
     private final DocumentTemplateService documentTemplateService;
@@ -25,73 +26,94 @@ public class DocumentTemplateController {
     }
 
     /**
-     * 新增 DocumentTemplate 记录
-     * @param entity 实体对象
-     * @return 是否新增成功
+     * 分页查询文档模板列表
      */
-    @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody DocumentTemplate entity) {
-        return ApiResponse.success(documentTemplateService.save(entity));
+    @ApiOperation("分页查询文档模板列表")
+    @GetMapping("/list")
+    public ApiResponse<Page<DocumentTemplate>> listTemplates(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String scope,
+            @RequestParam(required = false) String title
+    ) {
+        QueryWrapper<DocumentTemplate> query = new QueryWrapper<>();
+        if (scope != null) {
+            query.eq("scope", scope);
+        }
+        if (title != null && !title.isEmpty()) {
+            query.like("title", title);
+        }
+        query.orderByDesc("id");
+        Page<DocumentTemplate> pageResult = documentTemplateService.page(new Page<>(page, size), query);
+        return ApiResponse.success(pageResult);
     }
 
     /**
-     * 更新 DocumentTemplate 记录
-     * @param entity 实体对象（必须包含主键 ID）
-     * @return 是否更新成功
+     * 根据ID获取模板详情
      */
-    @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody DocumentTemplate entity) {
-        return ApiResponse.success(documentTemplateService.updateById(entity));
-    }
-
-    /**
-     * 删除指定 ID 的 DocumentTemplate 记录
-     * @param id 主键 ID
-     * @return 是否删除成功
-     */
-    @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
-        return ApiResponse.success(documentTemplateService.removeById(id));
-    }
-
-    /**
-     * 根据 ID 获取 DocumentTemplate 详情
-     * @param id 主键 ID
-     * @return 匹配的实体对象
-     */
+    @ApiOperation("根据ID获取模板详情")
     @GetMapping("/{id}")
-    public ApiResponse<DocumentTemplate> getById(@PathVariable("id") Integer id) {
-        return ApiResponse.success(documentTemplateService.getById(id));
+    public ApiResponse<DocumentTemplate> getTemplate(@PathVariable Long id) {
+        DocumentTemplate template = documentTemplateService.getById(id);
+        if (template == null) {
+            return ApiResponse.error("模板不存在");
+        }
+        return ApiResponse.success(template);
     }
 
     /**
-     * 获取所有 DocumentTemplate 列表（不分页）
-     * @return 实体列表
+     * 新建模板
      */
-    @GetMapping
-    public ApiResponse<List<DocumentTemplate>> list() {
-        return ApiResponse.success(documentTemplateService.list());
+    @ApiOperation("新建模板")
+    @PostMapping("/create")
+    public ApiResponse<DocumentTemplate> createTemplate(@RequestBody DocumentTemplate template) {
+        template.setCreatorId(getCurrentUserId());
+        boolean saved = documentTemplateService.save(template);
+        if (!saved) {
+            return ApiResponse.error("创建模板失败");
+        }
+        return ApiResponse.success(template);
     }
 
     /**
-     * 分页查询 DocumentTemplate 列表
-     * 支持关键字模糊搜索与排序
-     * @param pageRequest 分页与筛选请求参数
-     * @return 分页结果
+     * 更新模板
      */
-    @PostMapping("/page")
-    public ApiResponse<Page<DocumentTemplate>> getPage(@RequestBody PageRequest pageRequest) {
-        Page<DocumentTemplate> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
-        QueryWrapper<DocumentTemplate> wrapper = new QueryWrapper<>();
-
-        if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段
+    @ApiOperation("更新模板")
+    @PostMapping("/update")
+    public ApiResponse<DocumentTemplate> updateTemplate(@RequestBody DocumentTemplate template) {
+        if (template.getId() == null) {
+            return ApiResponse.error("模板ID不能为空");
         }
-
-        if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {
-            wrapper.orderBy(true, "asc".equalsIgnoreCase(pageRequest.getSortOrder()), pageRequest.getSortBy());
+        boolean updated = documentTemplateService.updateById(template);
+        if (!updated) {
+            return ApiResponse.error("更新模板失败");
         }
+        return ApiResponse.success(template);
+    }
 
-        return ApiResponse.success(documentTemplateService.page(page, wrapper));
+    /**
+     * 删除模板（逻辑删除）
+     */
+    @ApiOperation("删除模板（逻辑删除）")
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Void> deleteTemplate(@PathVariable Long id) {
+        DocumentTemplate template = documentTemplateService.getById(id);
+        if (template == null) {
+            return ApiResponse.error("模板不存在");
+        }
+        // 这里假设模板实体有 deleted 字段，或者你也可以直接 removeById
+        template.setDeleted(true);
+        boolean updated = documentTemplateService.updateById(template);
+        if (!updated) {
+            return ApiResponse.error("删除模板失败");
+        }
+        return ApiResponse.success();
+    }
+
+    /**
+     * 获取当前登录用户ID
+     */
+    private Long getCurrentUserId() {
+        return AuthContext.getCurrentUser().getId();
     }
 }

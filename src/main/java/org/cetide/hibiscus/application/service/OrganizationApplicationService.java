@@ -2,15 +2,19 @@ package org.cetide.hibiscus.application.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import org.cetide.hibiscus.domain.model.aggregate.Organization;
+import org.cetide.hibiscus.domain.model.aggregate.OrganizationMember;
+import org.cetide.hibiscus.domain.service.OrganizationMemberService;
 import org.cetide.hibiscus.domain.service.OrganizationService;
 import org.cetide.hibiscus.domain.service.UserService;
 import org.cetide.hibiscus.infrastructure.persistence.entity.OrganizationEntity;
 import org.cetide.hibiscus.infrastructure.persistence.entity.UserEntity;
+import org.cetide.hibiscus.infrastructure.utils.SnowflakeIdGenerator;
 import org.cetide.hibiscus.interfaces.rest.dto.CreateOrganizationRequest;
 import org.cetide.hibiscus.interfaces.rest.dto.OrganizationVO;
 import org.cetide.hibiscus.interfaces.rest.dto.UpdateOrganizationRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,10 +23,13 @@ public class OrganizationApplicationService {
 
     private final OrganizationService organizationService;
 
+    private final OrganizationMemberService organizationMemberService;
+
     private final UserService userService;
 
-    public OrganizationApplicationService(OrganizationService organizationService, UserService userService) {
+    public OrganizationApplicationService(OrganizationService organizationService, OrganizationMemberService organizationMemberService, UserService userService) {
         this.organizationService = organizationService;
+        this.organizationMemberService = organizationMemberService;
         this.userService = userService;
     }
 
@@ -45,6 +52,16 @@ public class OrganizationApplicationService {
         bean.setMaxMembers(request.maxMembers());
         bean.setCurrentMembers(1);
         organizationService.save(bean);
+
+        // 2. 添加组织成员记录（创建者作为 OWNER）
+        OrganizationMember member = new OrganizationMember();
+        member.setId(SnowflakeIdGenerator.nextId());
+        member.setOrganizationId(bean.getId());
+        member.setUserId(id);
+        member.setRole("OWNER");
+        member.setStatus("ACTIVE");
+        member.setJoinedAt(LocalDateTime.now());
+        organizationMemberService.save(member);
         return convertToVO(bean);
     }
 

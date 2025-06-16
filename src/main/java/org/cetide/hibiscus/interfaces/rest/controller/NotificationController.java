@@ -9,6 +9,8 @@ import org.cetide.hibiscus.domain.model.aggregate.Notification;
 import org.cetide.hibiscus.domain.model.enums.NotificationType;
 import org.cetide.hibiscus.domain.service.NotificationService;
 import org.cetide.hibiscus.infrastructure.persistence.entity.UserEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,6 +22,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/notification")
 public class NotificationController {
 
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(NotificationController.class);
+
+    /**
+     * NotificationService
+     */
     private final NotificationService notificationService;
 
     public NotificationController(NotificationService notificationService) {

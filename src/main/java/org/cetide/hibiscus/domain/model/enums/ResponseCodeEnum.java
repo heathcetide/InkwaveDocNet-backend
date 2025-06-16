@@ -28,8 +28,13 @@ public enum ResponseCodeEnum {
     ITEM_OUT_OF_STOCK("BUS_3003", "商品库存不足"),
 
     // ========== 资源相关 ==========
+    ALREADY_MEMBER("RES_4000", "已是该组织成员"),
+    USAGE_LIMIT_EXCEEDED("RES_4000", "已达最大使用次数"),
     NOT_FOUND("RES_4001", "资源不存在"),
-    DUPLICATE_RESOURCE("RES_4002", "资源已存在");
+    DUPLICATE_RESOURCE("RES_4002", "资源已存在"),
+    EXPIRED("RES_4003", "资源已过期");
+
+
 
     private final String code;
     private final String message;

@@ -1,6 +1,7 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.cetide.hibiscus.application.command.CreateUserCommand;
 import org.cetide.hibiscus.application.command.DeleteUserCommand;
@@ -33,18 +34,28 @@ import static org.cetide.hibiscus.domain.model.enums.ResponseCodeEnum.SYSTEM_ERR
  *
  * @author Hibiscus-code-generate
  */
+@Api(tags = "User 控制器")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
+    /**
+     * Logger
+     */
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    /**
+     * UserApplicationService
+     */
     private final UserApplicationService userAppService;
 
     public UserController(UserApplicationService userAppService) {
         this.userAppService = userAppService;
     }
 
+    /**
+     * 发送验证码
+     */
     @GetMapping("/send-code/{email}")
     @ApiOperation("发送验证码")
     public ApiResponse<Boolean> sendVerificationCode(@PathVariable String email) {

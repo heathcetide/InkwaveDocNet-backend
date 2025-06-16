@@ -1,97 +1,103 @@
 package org.cetide.hibiscus.interfaces.rest.controller;
 
-import org.cetide.hibiscus.domain.model.aggregate.KnowledgeBase;
-import org.cetide.hibiscus.common.request.PageRequest;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.cetide.hibiscus.common.context.AuthContext;
+import org.cetide.hibiscus.common.exception.AuthorizationException;
 import org.cetide.hibiscus.common.response.ApiResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.cetide.hibiscus.domain.model.aggregate.KnowledgeBase;
 import org.cetide.hibiscus.domain.service.KnowledgeBaseService;
+import org.cetide.hibiscus.infrastructure.storage.FileStorageAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.cetide.hibiscus.common.constants.KnowledgeBaseConstants.DEFAULT_KNOWLEDGE_BASE_COVER_URL;
 
 /**
  * KnowledgeBase 控制器，提供基础增删改查接口
  * @author Hibiscus-code-generate
  */
+@Api(tags = "KnowledgeBase 控制器")
 @RestController
-@RequestMapping("/api/knowledgebase")
+@RequestMapping("/api/knowledge_base")
 public class KnowledgeBaseController {
 
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(KnowledgeBaseController.class);
+
+    /**
+     * KnowledgeBase 服务类
+     */
     private final KnowledgeBaseService knowledgeBaseService;
 
-    public KnowledgeBaseController(KnowledgeBaseService knowledgeBaseService) {
+    /**
+     * 文件存储适配器
+     */
+    private final FileStorageAdapter fileStorageAdapter;
+
+    public KnowledgeBaseController(KnowledgeBaseService knowledgeBaseService, FileStorageAdapter fileStorageAdapter) {
         this.knowledgeBaseService = knowledgeBaseService;
+        this.fileStorageAdapter = fileStorageAdapter;
     }
 
     /**
-     * 新增 KnowledgeBase 记录
-     * @param entity 实体对象
-     * @return 是否新增成功
+     * 创建个人知识库
      */
-    @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody KnowledgeBase entity) {
-        return ApiResponse.success(knowledgeBaseService.save(entity));
-    }
-
-    /**
-     * 更新 KnowledgeBase 记录
-     * @param entity 实体对象（必须包含主键 ID）
-     * @return 是否更新成功
-     */
-    @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody KnowledgeBase entity) {
-        return ApiResponse.success(knowledgeBaseService.updateById(entity));
-    }
-
-    /**
-     * 删除指定 ID 的 KnowledgeBase 记录
-     * @param id 主键 ID
-     * @return 是否删除成功
-     */
-    @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
-        return ApiResponse.success(knowledgeBaseService.removeById(id));
-    }
-
-    /**
-     * 根据 ID 获取 KnowledgeBase 详情
-     * @param id 主键 ID
-     * @return 匹配的实体对象
-     */
-    @GetMapping("/{id}")
-    public ApiResponse<KnowledgeBase> getById(@PathVariable("id") Integer id) {
-        return ApiResponse.success(knowledgeBaseService.getById(id));
-    }
-
-    /**
-     * 获取所有 KnowledgeBase 列表（不分页）
-     * @return 实体列表
-     */
-    @GetMapping
-    public ApiResponse<List<KnowledgeBase>> list() {
-        return ApiResponse.success(knowledgeBaseService.list());
-    }
-
-    /**
-     * 分页查询 KnowledgeBase 列表
-     * 支持关键字模糊搜索与排序
-     * @param pageRequest 分页与筛选请求参数
-     * @return 分页结果
-     */
-    @PostMapping("/page")
-    public ApiResponse<Page<KnowledgeBase>> getPage(@RequestBody PageRequest pageRequest) {
-        Page<KnowledgeBase> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
-        QueryWrapper<KnowledgeBase> wrapper = new QueryWrapper<>();
-
-        if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段
+    @ApiOperation("当前登录用户创建个人知识库")
+    @PostMapping("/createPersonal")
+    public ApiResponse<KnowledgeBase> createPersonalKnowledgeBase(@RequestBody KnowledgeBase knowledgeBase) {
+        // 1. 获取当前登录用户ID，假设通过安全上下文获取
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            throw new AuthorizationException("当前用户未登录");
         }
+        // 2. 设置ownerId和organizationId为null（个人知识库）
+        knowledgeBase.setOwnerId(currentUserId);
+        knowledgeBase.setOrganizationId(null);
+        knowledgeBase.setCoverUrl(knowledgeBase.getCoverUrl() == null ? DEFAULT_KNOWLEDGE_BASE_COVER_URL : knowledgeBase.getCoverUrl());
+        // 3. 调用Service保存
+        return ApiResponse.success(knowledgeBaseService.saveKnowledgeBase(knowledgeBase));
+    }
 
-        if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {
-            wrapper.orderBy(true, "asc".equalsIgnoreCase(pageRequest.getSortOrder()), pageRequest.getSortBy());
+    /**
+     * 获取当前用户的个人知识库
+     */
+    @ApiOperation("获取当前用户的个人知识库")
+    @GetMapping("/getPersonal")
+    public ApiResponse<List<KnowledgeBase>> getPersonalKnowledgeBase() {
+        // 1. 获取当前登录用户ID，假设通过安全上下文获取
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            throw new AuthorizationException("当前用户未登录");
         }
+        // 2. 调用Service获取
+        List<KnowledgeBase> knowledgeBase = knowledgeBaseService.getKnowledgeBaseByOwnerId(currentUserId);
+        return ApiResponse.success(knowledgeBase);
+    }
 
-        return ApiResponse.success(knowledgeBaseService.page(page, wrapper));
+    /**
+     * 更新知识库信息
+     */
+    @ApiOperation("更新知识库信息")
+    @PostMapping("/update")
+    public ApiResponse<KnowledgeBase> updateKnowledgeBase(@RequestBody KnowledgeBase knowledgeBase) {
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            throw new AuthorizationException("当前用户未登录");
+        }
+        knowledgeBase.setOwnerId(currentUserId);
+        return ApiResponse.success(knowledgeBaseService.updateKnowledgeBase(knowledgeBase));
+    }
+
+    /**
+     * 获取当前登录用户ID
+     */
+    private Long getCurrentUserId() {
+        return AuthContext.getCurrentUser().getId();
     }
 }

@@ -4,7 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.cetide.hibiscus.common.exception.BusinessException;
-import org.cetide.hibiscus.infrastructure.netty.protocol.MessageType;
 import org.cetide.hibiscus.infrastructure.netty.protocol.NettyMessage;
 import org.cetide.hibiscus.infrastructure.netty.session.SessionManager;
 import org.slf4j.Logger;
